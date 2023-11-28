@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "935787381560",
+    "project_id": "despesas-eu-deborah",
+    "storage_bucket": "despesas-eu-deborah.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935787381560:android:4a87cc4b76f4d96605f7cd",
+        "android_client_info": {
+          "package_name": "com.example.despesas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4PjtaW2Opt89KLN4xiW10cKeVO3RYVQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
