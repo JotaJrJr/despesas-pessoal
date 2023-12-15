@@ -1,79 +1,34 @@
-import 'dart:convert';
-import 'dart:js_interop';
-
+import 'package:despesas/common/database/daos/despesa_dao.dart';
 import 'package:despesas/common/domain/services/service_despesa.dart';
 import 'package:despesas/common/models/despesa_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 class ServiceDespesaImpl implements ServiceDespesa {
-  static List<DespesaModel> listaDespesas = [];
+  final DespesaDao dao;
 
-  ServiceDespesaImpl() {}
+  ServiceDespesaImpl({required this.dao});
 
   @override
-  Future<int> createDespesa(DespesaModel model) async {
-    model.id = const Uuid().v1().hashCode;
-
-    // await
+  Future<DespesaModel> createDespesa(DespesaModel model) {
+    return dao.insert(model.toData()).then((value) => DespesaModel.fromData(value));
   }
 
   @override
-  Future deleteDespesa(int id) async {
-    var data = getDespesa(id);
-    if (data == null) {
-      return;
-    }
-    listaDespesas.removeWhere((element) => element.id == id);
-
-    _updateList();
+  Future<void> deleteDespesa(String id) {
+    return dao.deleteById(id);
   }
 
   @override
-  Future<DespesaModel> getDespesa(int id) {
-    return Future.value(listaDespesas.firstWhere((element) => element.id == id));
+  Future<DespesaModel> getById(String id) {
+    return dao.getById(id).then((value) => value.map((e) => DespesaModel.fromData(value)));
   }
 
   @override
-  Future<List<DespesaModel>> getDespesas() async {
-    return listaDespesas;
+  Future<List<DespesaModel>> getDespesas() {
+    return dao.getAll().then((value) => value.map((e) => DespesaModel.fromData(e)).toList());
   }
 
   @override
-  Future<DespesaModel> updateDespesa(int id, DespesaModel model) async {
-    await _saveOrUpdate(id, model);
-    return model;
-  }
-
-  Future<void> _saveOrUpdate(int id, DespesaModel model) async {
-    int index = listaDespesas.indexWhere((element) => element.id == id);
-
-    if (index != -1) {
-      listaDespesas[index] = model;
-    } else {
-      listaDespesas.add(model);
-    }
-  }
-
-  Future<void> _updateList() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('despesas', json.encode(listaDespesas.map((e) => e.toJson()).toList()));
-  }
-
-  void _fillDespesas() async {
-    List<DespesaModel> despesas = [];
-
-    if (listaDespesas.isNotEmpty) {
-      return;
-    }
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final despesasData = prefs.getString('despesas');
-    if (despesasData != null) {
-      final List<dynamic> despesasList = json.decode(despesasData);
-      despesas = despesasList.map((e) => DespesaModel.fromJson(e)).toList();
-    }
-
-    listaDespesas = despesas;
+  Future insertOrUpdate(DespesaModel model, String? id) {
+    return dao.insertOrUpdate(model.toData());
   }
 }

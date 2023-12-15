@@ -1,10 +1,10 @@
-class CategoriaDespesaModel {
-  int? id;
+class CategoriaModel {
+  String? id;
   String? descricao;
 
-  CategoriaDespesaModel({this.id, this.descricao});
+  CategoriaModel({this.id, this.descricao});
 
-  CategoriaDespesaModel.fromJson(Map<String, dynamic> json) {
+  CategoriaModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     descricao = json['descricao'];
   }

@@ -2,8 +2,8 @@ import 'package:despesas/common/models/despesa_model.dart';
 
 abstract class ServiceDespesa {
   Future<List<DespesaModel>> getDespesas();
-  Future<DespesaModel> getDespesa(int id);
-  Future<int> createDespesa(DespesaModel model);
-  Future<DespesaModel> updateDespesa(int id, DespesaModel model);
-  Future<int> deleteDespesa(int id);
+  Future<DespesaModel> getById(String id);
+  Future<DespesaModel> createDespesa(DespesaModel model);
+  Future insertOrUpdate(DespesaModel model, String? id);
+  Future<void> deleteDespesa(String id);
 }
