@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:despesas/common/database/services/service_categoria_impl.dart';
 import 'package:despesas/common/database/services/service_despesa_impl.dart';
 import 'package:despesas/common/models/categoria_despesa_model.dart';
@@ -8,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class CadastrarDespesaViewModel extends ChangeNotifier {
-  TextEditingController descricaoController = TextEditingController();
-  TextEditingController valorController = TextEditingController();
-
   final ServiceDespesaImpl serviceDespesaImpl;
   final ServiceCategoriaImpl serviceCategoriaImpl;
 
@@ -19,7 +14,27 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     required this.serviceCategoriaImpl,
   });
 
+  TextEditingController descricaoController = TextEditingController();
+  TextEditingController valorController = TextEditingController();
+  TextEditingController categoriaDescricaoController = TextEditingController();
+
   List<DespesaModel> despesas = [];
+
+  CategoriaModel? categoriaSelecionada;
+
+  bool isCategoriaSelecionada = false;
+
+  void preencherCategoriaSelecionada(CategoriaModel model) {
+    categoriaSelecionada = model;
+    isCategoriaSelecionada = true;
+    notifyListeners();
+  }
+
+  void esvaziarCategoriaSelecionada() {
+    categoriaSelecionada = null;
+    isCategoriaSelecionada = false;
+    notifyListeners();
+  }
 
   Future<List<DespesaModel>> getAllDespesas() {
     return serviceDespesaImpl.getDespesas();
@@ -40,6 +55,45 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
 
     return model;
   }
+
+  bool canSaveCategoria() {
+    if (categoriaDescricaoController.text.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> insertCategoria() async {
+    try {
+      CategoriaModel model = CategoriaModel(
+        id: const Uuid().v4(),
+        descricao: categoriaDescricaoController.text,
+      );
+
+      await serviceCategoriaImpl.createCategoria(model);
+    } catch (e) {
+      throw (e);
+    }
+  }
+
+  void deleteCategoriaById(String id) {
+    serviceCategoriaImpl.deleteCategoria(id);
+  }
+
+  // Future<CategoriaModel> insertCategoria() {
+  //   String idCategoria = Uuid().v4();
+
+  //   try {
+  //     if (categoriaDescricaoController.text.isNotEmpty) {
+  //       CategoriaModel categoria = CategoriaModel(
+  //         id: idCategoria,
+  //         descricao: categoriaDescricaoController.text,
+  //       );
+
+  //     }
+  //   } catch (e) {}
+  // }
 
   bool canSave() {
     return descricaoController.text.isNotEmpty && valorController.text.isNotEmpty;

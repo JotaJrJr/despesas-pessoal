@@ -9,6 +9,8 @@ import 'package:despesas/common/widgets/text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/safe_handler.dart';
+
 class CadastrarDespesaPage extends StatefulWidget {
   const CadastrarDespesaPage({super.key});
 
@@ -33,8 +35,6 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
 
   @override
   Widget build(BuildContext context) {
-    Color containerColor = _viewModel.canSave() ? Colors.green : Colors.red;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Despesa"),
@@ -43,11 +43,17 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 8),
+            Text("Descrição da despesa"),
+            const SizedBox(height: 4),
             TextFieldWidget(
               controller: _viewModel.descricaoController,
             ),
             const SizedBox(height: 8),
+            Text("Valor da despesa"),
+            const SizedBox(height: 4),
             TextFieldCurrencyWidget(
               isCurrencyMoney: true,
               controller: _viewModel.valorController,
@@ -70,88 +76,182 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 12),
+            Visibility(
+              visible: _viewModel.isCategoriaSelecionada,
+              child: AnimatedBuilder(
+                animation: _viewModel,
+                builder: (_, __) {
+                  return GestureDetector(
+                    onTap: () => _viewModel.esvaziarCategoriaSelecionada(),
+                    child: Column(
+                      children: [
+                        const Text("Categoria selecionada:"),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          child: Text(SafeHandler.value(_viewModel.categoriaSelecionada?.descricao)),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
             const Spacer(),
             Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                child: const Text(
-                  "Adicionar Categoria",
-                  style: TextStyle(color: Colors.white),
+              child: GestureDetector(
+                onTap: () => showCategoriaModalBottomSheet(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: const Text(
+                    "Adicionar Categoria",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 4),
-            Container(
-              height: 300,
-              decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-              child: Expanded(
-                child: SizedBox(
-                  child: StreamBuilder<List<CategoriaModel>>(
-                    stream: _viewModel.watchAll(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // circular
-                      }
+            Expanded(
+              child: SizedBox(
+                // height: 300,
+                child: Expanded(
+                  child: SizedBox(
+                    child: StreamBuilder<List<CategoriaModel>>(
+                      stream: _viewModel.watchAll(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
 
-                      if (snapshot.hasError) {
-                        // deu ruim
-                      }
+                        if (snapshot.hasError) {
+                          return Text("Deu ruim, não sei por quê");
+                        }
 
-                      final List<CategoriaModel> list = snapshot.data ?? [];
-                      if (list.isEmpty) {
-                        // vazio
-                      }
+                        final List<CategoriaModel> list = snapshot.data ?? [];
+                        if (list.isEmpty) {
+                          return Center(
+                            child: Text("Clica ali em cima pra adicionar\nE poder selecionar"),
+                          );
+                        }
 
-                      // container com lista
-                      return Container(
-                        child: ListView.builder(
-                          itemCount: list.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                Text(
-                                  list[index].id ?? "",
+                        // container com lista
+                        return SizedBox(
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) => const SizedBox(height: 4),
+                            itemCount: list.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () => _viewModel.preencherCategoriaSelecionada(list[index]),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                      )),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        list[index].descricao ?? "",
+                                      ),
+                                      IconButton(
+                                        onPressed: () => _viewModel.deleteCategoriaById(list[index].id!),
+                                        icon: const Icon(Icons.delete),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                Text(
-                                  list[index].descricao ?? "",
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  // child: ListView.builder(
-                  //   itemCount: 10,
-                  //   shrinkWrap: true,
-                  //   itemBuilder: (context, index) {
-                  //     return const Padding(
-                  //       padding: EdgeInsets.all(4),
-                  //       child: Card(
-                  //         child: ListTile(
-                  //           title: Text("TítuloAAA"),
-                  //           subtitle: Text("Subtítulo"),
-                  //           leading: Icon(Icons.money),
-                  //           trailing: Icon(Icons.delete),
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
+  }
+
+  showCategoriaModalBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SizedBox(
+              // height: 180,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFieldWidget(
+                    controller: _viewModel.categoriaDescricaoController,
+                  ),
+                  const SizedBox(height: 12.0),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_viewModel.canSaveCategoria()) {
+                          Navigator.pop(context);
+                          _viewModel.insertCategoria();
+                          _viewModel.categoriaDescricaoController.clear();
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Calma lá'),
+                                content: Text('Tem que digitar o nome da categoria pra adicionar depois'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // Close the Dialog
+                                    },
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: const Text(
+                          "Adicionar",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18.0),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
