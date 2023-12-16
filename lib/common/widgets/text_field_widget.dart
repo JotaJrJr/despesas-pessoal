@@ -6,6 +6,7 @@ class TextFieldWidget extends StatelessWidget {
   final Function(String)? onSubmitted;
   final int? maxLines;
   final Widget? icon;
+  final Function(String)? onChanged;
 
   const TextFieldWidget({
     super.key,
@@ -14,6 +15,7 @@ class TextFieldWidget extends StatelessWidget {
     this.onSubmitted,
     this.maxLines,
     this.icon,
+    this.onChanged,
   });
 
   @override
@@ -28,6 +30,7 @@ class TextFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
+        onChanged: onChanged,
         onSubmitted: onSubmitted,
         keyboardType: textInputType,
         controller: controller,

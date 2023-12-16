@@ -9,6 +9,7 @@ class TextFieldCurrencyWidget extends StatelessWidget {
   final Widget? icon;
   final TextInputFormatter? textInputFormatter;
   final bool? isCurrencyMoney;
+  final void Function(String)? onChanged;
 
   const TextFieldCurrencyWidget({
     super.key,
@@ -19,6 +20,7 @@ class TextFieldCurrencyWidget extends StatelessWidget {
     this.icon,
     this.textInputFormatter,
     this.isCurrencyMoney,
+    this.onChanged,
   });
 
   @override
@@ -33,6 +35,7 @@ class TextFieldCurrencyWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
+        onChanged: (value) => onChanged,
         inputFormatters: textInputFormatter == null
             ? []
             : [

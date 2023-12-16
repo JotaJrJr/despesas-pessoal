@@ -6,4 +6,5 @@ abstract class ServiceDespesa {
   Future<DespesaModel> createDespesa(DespesaModel model);
   Future insertOrUpdate(DespesaModel model, String? id);
   Future<void> deleteDespesa(String id);
+  Stream<List<DespesaModel>> watchAll();
 }

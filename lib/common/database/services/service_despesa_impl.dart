@@ -31,4 +31,14 @@ class ServiceDespesaImpl implements ServiceDespesa {
   Future insertOrUpdate(DespesaModel model, String? id) {
     return dao.insertOrUpdate(model.toData());
   }
+
+  @override
+  Stream<List<DespesaModel>> watchAll() async* {
+    List<DespesaModel> list = [];
+
+    await for (var data in dao.watchAll()) {
+      list = data.map((e) => DespesaModel.fromData(e)).toList();
+      yield list;
+    }
+  }
 }

@@ -1,3 +1,5 @@
+import 'package:despesas/common/database/app_db.dart';
+
 class CategoriaModel {
   String? id;
   String? descricao;
@@ -14,5 +16,17 @@ class CategoriaModel {
     data['id'] = id;
     data['descricao'] = descricao;
     return data;
+  }
+
+  CategoriaModel.fromData(CategoriaData categoriaData) {
+    id = categoriaData.id;
+    descricao = categoriaData.descricao;
+  }
+
+  CategoriaData toData() {
+    return CategoriaData(
+      id: id!,
+      descricao: descricao,
+    );
   }
 }
