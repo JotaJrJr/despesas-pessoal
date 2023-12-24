@@ -50,11 +50,13 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     String idDespesa = Uuid().v4();
 
     DespesaModel model = DespesaModel(
-      id: idDespesa,
-      descricao: descricaoController.text,
-      valor: extractNumericValue(valorController.text),
-      idCategoria: "1",
-    );
+        id: idDespesa,
+        descricao: descricaoController.text,
+        valor: extractNumericValue(valorController.text),
+        idCategoria: categoriaSelecionada?.id,
+        descricaoCategoria: categoriaSelecionada?.descricao,
+        data: DateTime.now().millisecondsSinceEpoch);
+
     debugPrint(model.toString());
     debugPrint(model.descricao);
     debugPrint(model.id);
@@ -67,9 +69,18 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     try {
       final Map<String, dynamic> despesaMap = model.toJson();
 
-      await firestore.collection('despesas').add(model.toJson());
+      // await firestore.collection('despesas').doc(model.id!).collection('despesas').add(model.toJson());
+      // await firestore.collection('despesas').doc(model.id!).set(model.toJson());
+
+      await firestore.collection('despesas').add({
+        'id': "12j301923j1",
+        'descricao': "descrição foda",
+        'valor': 12.3,
+        'idCategoria': "1",
+      });
     } catch (e) {
       debugPrint("deu erro aqui: $e");
+      debugPrint(e.toString());
     }
   }
 
@@ -92,6 +103,10 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     } catch (e) {
       throw (e);
     }
+  }
+
+  Future<void> insertDespesa(DespesaModel model) async {
+    await serviceDespesaImpl.createDespesa(model);
   }
 
   void deleteCategoriaById(String id) {

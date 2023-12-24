@@ -6,5 +6,6 @@ class Despesa extends Table {
   RealColumn get valor => real().nullable().named("VALOR")();
   IntColumn get data => integer().nullable().named("DATA")();
   TextColumn get idCategoria => text().nullable().named("ID_CATEGORIA")();
+  TextColumn get descricaoCategoria => text().nullable().named("DESCRICAO_CATEGORIA")();
   BoolColumn get sincronizado => boolean().nullable().named("SINCRONIZADO")();
 }

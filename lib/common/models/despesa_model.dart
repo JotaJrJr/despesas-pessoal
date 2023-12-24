@@ -6,9 +6,10 @@ class DespesaModel {
   double? valor;
   int? data;
   String? idCategoria;
+  String? descricaoCategoria;
   bool? sincronizado;
 
-  DespesaModel({this.id, this.descricao, this.valor, this.data, this.idCategoria, this.sincronizado});
+  DespesaModel({this.id, this.descricao, this.valor, this.data, this.idCategoria, this.descricaoCategoria, this.sincronizado});
 
   DespesaModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -16,6 +17,7 @@ class DespesaModel {
     valor = json['valor'];
     data = json['data'];
     idCategoria = json['idCategoria'];
+    descricaoCategoria = json['descricaoCategoria'];
     sincronizado = json['sincronizado'];
   }
 
@@ -25,6 +27,7 @@ class DespesaModel {
     data['valor'] = valor;
     data['data'] = data;
     data['idCategoria'] = idCategoria;
+    data['descricaoCategoria'] = descricaoCategoria;
     data['sincronizado'] = sincronizado;
     return data;
   }
@@ -35,6 +38,7 @@ class DespesaModel {
     valor = despesaData.valor;
     data = despesaData.data;
     idCategoria = despesaData.idCategoria;
+    descricaoCategoria = despesaData.descricaoCategoria;
     sincronizado = despesaData.sincronizado;
   }
 
@@ -45,6 +49,7 @@ class DespesaModel {
       valor: valor,
       data: data,
       idCategoria: idCategoria,
+      descricaoCategoria: descricaoCategoria,
       sincronizado: sincronizado,
     );
   }

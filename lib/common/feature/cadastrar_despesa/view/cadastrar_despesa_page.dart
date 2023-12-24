@@ -63,7 +63,8 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () => _viewModel.saveDespesaToFirestore(_viewModel.createModel()),
+              // onTap: () => _viewModel.saveDespesaToFirestore(_viewModel.createModel()),
+              onTap: () => _viewModel.insertDespesa(_viewModel.createModel()),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Container(
@@ -108,7 +109,7 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
                       GestureDetector(
                         onTap: () {
                           _viewModel.esvaziarCategoriaSelecionada();
-                          print("ADSADADASD");
+                          debugPrint("ADSADADASD");
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
@@ -147,63 +148,58 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
             const SizedBox(height: 4),
             Expanded(
               child: SizedBox(
-                // height: 300,
-                child: Expanded(
-                  child: SizedBox(
-                    child: StreamBuilder<List<CategoriaModel>>(
-                      stream: _viewModel.watchAll(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
+                child: StreamBuilder<List<CategoriaModel>>(
+                  stream: _viewModel.watchAll(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
 
-                        if (snapshot.hasError) {
-                          return Text("Deu ruim, não sei por quê");
-                        }
+                    if (snapshot.hasError) {
+                      return const Text("Deu ruim, não sei por quê");
+                    }
 
-                        final List<CategoriaModel> list = snapshot.data ?? [];
-                        if (list.isEmpty) {
-                          return Center(
-                            child: Text("Clica ali em cima pra adicionar\nE poder selecionar"),
-                          );
-                        }
+                    final List<CategoriaModel> list = snapshot.data ?? [];
+                    if (list.isEmpty) {
+                      return const Center(
+                        child: Text("Clica ali em cima pra adicionar\nE poder selecionar"),
+                      );
+                    }
 
-                        // container com lista
-                        return SizedBox(
-                          child: ListView.separated(
-                            separatorBuilder: (context, index) => const SizedBox(height: 4),
-                            itemCount: list.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () => _viewModel.preencherCategoriaSelecionada(list[index]),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      border: Border.all(
-                                        color: Colors.blue,
-                                      )),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        list[index].descricao ?? "",
-                                      ),
-                                      IconButton(
-                                        onPressed: () => _viewModel.deleteCategoriaById(list[index].id!),
-                                        icon: const Icon(Icons.delete),
-                                      )
-                                    ],
+                    // container com lista
+                    return SizedBox(
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(height: 4),
+                        itemCount: list.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () => _viewModel.preencherCategoriaSelecionada(list[index]),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  border: Border.all(
+                                    color: Colors.blue,
+                                  )),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    list[index].descricao ?? "",
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                                  IconButton(
+                                    onPressed: () => _viewModel.deleteCategoriaById(list[index].id!),
+                                    icon: const Icon(Icons.delete),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

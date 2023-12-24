@@ -35,6 +35,12 @@ class $DespesaTable extends Despesa with TableInfo<$DespesaTable, DespesaData> {
   late final GeneratedColumn<String> idCategoria = GeneratedColumn<String>(
       'ID_CATEGORIA', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descricaoCategoriaMeta =
+      const VerificationMeta('descricaoCategoria');
+  @override
+  late final GeneratedColumn<String> descricaoCategoria =
+      GeneratedColumn<String>('DESCRICAO_CATEGORIA', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _sincronizadoMeta =
       const VerificationMeta('sincronizado');
   @override
@@ -45,8 +51,15 @@ class $DespesaTable extends Despesa with TableInfo<$DespesaTable, DespesaData> {
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'CHECK ("SINCRONIZADO" IN (0, 1))'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, descricao, valor, data, idCategoria, sincronizado];
+  List<GeneratedColumn> get $columns => [
+        id,
+        descricao,
+        valor,
+        data,
+        idCategoria,
+        descricaoCategoria,
+        sincronizado
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -80,6 +93,12 @@ class $DespesaTable extends Despesa with TableInfo<$DespesaTable, DespesaData> {
           idCategoria.isAcceptableOrUnknown(
               data['ID_CATEGORIA']!, _idCategoriaMeta));
     }
+    if (data.containsKey('DESCRICAO_CATEGORIA')) {
+      context.handle(
+          _descricaoCategoriaMeta,
+          descricaoCategoria.isAcceptableOrUnknown(
+              data['DESCRICAO_CATEGORIA']!, _descricaoCategoriaMeta));
+    }
     if (data.containsKey('SINCRONIZADO')) {
       context.handle(
           _sincronizadoMeta,
@@ -105,6 +124,8 @@ class $DespesaTable extends Despesa with TableInfo<$DespesaTable, DespesaData> {
           .read(DriftSqlType.int, data['${effectivePrefix}DATA']),
       idCategoria: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}ID_CATEGORIA']),
+      descricaoCategoria: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}DESCRICAO_CATEGORIA']),
       sincronizado: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}SINCRONIZADO']),
     );
@@ -122,6 +143,7 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
   final double? valor;
   final int? data;
   final String? idCategoria;
+  final String? descricaoCategoria;
   final bool? sincronizado;
   const DespesaData(
       {required this.id,
@@ -129,6 +151,7 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
       this.valor,
       this.data,
       this.idCategoria,
+      this.descricaoCategoria,
       this.sincronizado});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -145,6 +168,9 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
     }
     if (!nullToAbsent || idCategoria != null) {
       map['ID_CATEGORIA'] = Variable<String>(idCategoria);
+    }
+    if (!nullToAbsent || descricaoCategoria != null) {
+      map['DESCRICAO_CATEGORIA'] = Variable<String>(descricaoCategoria);
     }
     if (!nullToAbsent || sincronizado != null) {
       map['SINCRONIZADO'] = Variable<bool>(sincronizado);
@@ -164,6 +190,9 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
       idCategoria: idCategoria == null && nullToAbsent
           ? const Value.absent()
           : Value(idCategoria),
+      descricaoCategoria: descricaoCategoria == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descricaoCategoria),
       sincronizado: sincronizado == null && nullToAbsent
           ? const Value.absent()
           : Value(sincronizado),
@@ -179,6 +208,8 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
       valor: serializer.fromJson<double?>(json['valor']),
       data: serializer.fromJson<int?>(json['data']),
       idCategoria: serializer.fromJson<String?>(json['idCategoria']),
+      descricaoCategoria:
+          serializer.fromJson<String?>(json['descricaoCategoria']),
       sincronizado: serializer.fromJson<bool?>(json['sincronizado']),
     );
   }
@@ -191,6 +222,7 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
       'valor': serializer.toJson<double?>(valor),
       'data': serializer.toJson<int?>(data),
       'idCategoria': serializer.toJson<String?>(idCategoria),
+      'descricaoCategoria': serializer.toJson<String?>(descricaoCategoria),
       'sincronizado': serializer.toJson<bool?>(sincronizado),
     };
   }
@@ -201,6 +233,7 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
           Value<double?> valor = const Value.absent(),
           Value<int?> data = const Value.absent(),
           Value<String?> idCategoria = const Value.absent(),
+          Value<String?> descricaoCategoria = const Value.absent(),
           Value<bool?> sincronizado = const Value.absent()}) =>
       DespesaData(
         id: id ?? this.id,
@@ -208,6 +241,9 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
         valor: valor.present ? valor.value : this.valor,
         data: data.present ? data.value : this.data,
         idCategoria: idCategoria.present ? idCategoria.value : this.idCategoria,
+        descricaoCategoria: descricaoCategoria.present
+            ? descricaoCategoria.value
+            : this.descricaoCategoria,
         sincronizado:
             sincronizado.present ? sincronizado.value : this.sincronizado,
       );
@@ -219,14 +255,15 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
           ..write('valor: $valor, ')
           ..write('data: $data, ')
           ..write('idCategoria: $idCategoria, ')
+          ..write('descricaoCategoria: $descricaoCategoria, ')
           ..write('sincronizado: $sincronizado')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, descricao, valor, data, idCategoria, sincronizado);
+  int get hashCode => Object.hash(id, descricao, valor, data, idCategoria,
+      descricaoCategoria, sincronizado);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -236,6 +273,7 @@ class DespesaData extends DataClass implements Insertable<DespesaData> {
           other.valor == this.valor &&
           other.data == this.data &&
           other.idCategoria == this.idCategoria &&
+          other.descricaoCategoria == this.descricaoCategoria &&
           other.sincronizado == this.sincronizado);
 }
 
@@ -245,6 +283,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
   final Value<double?> valor;
   final Value<int?> data;
   final Value<String?> idCategoria;
+  final Value<String?> descricaoCategoria;
   final Value<bool?> sincronizado;
   final Value<int> rowid;
   const DespesaCompanion({
@@ -253,6 +292,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
     this.valor = const Value.absent(),
     this.data = const Value.absent(),
     this.idCategoria = const Value.absent(),
+    this.descricaoCategoria = const Value.absent(),
     this.sincronizado = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -262,6 +302,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
     this.valor = const Value.absent(),
     this.data = const Value.absent(),
     this.idCategoria = const Value.absent(),
+    this.descricaoCategoria = const Value.absent(),
     this.sincronizado = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id);
@@ -271,6 +312,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
     Expression<double>? valor,
     Expression<int>? data,
     Expression<String>? idCategoria,
+    Expression<String>? descricaoCategoria,
     Expression<bool>? sincronizado,
     Expression<int>? rowid,
   }) {
@@ -280,6 +322,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
       if (valor != null) 'VALOR': valor,
       if (data != null) 'DATA': data,
       if (idCategoria != null) 'ID_CATEGORIA': idCategoria,
+      if (descricaoCategoria != null) 'DESCRICAO_CATEGORIA': descricaoCategoria,
       if (sincronizado != null) 'SINCRONIZADO': sincronizado,
       if (rowid != null) 'rowid': rowid,
     });
@@ -291,6 +334,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
       Value<double?>? valor,
       Value<int?>? data,
       Value<String?>? idCategoria,
+      Value<String?>? descricaoCategoria,
       Value<bool?>? sincronizado,
       Value<int>? rowid}) {
     return DespesaCompanion(
@@ -299,6 +343,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
       valor: valor ?? this.valor,
       data: data ?? this.data,
       idCategoria: idCategoria ?? this.idCategoria,
+      descricaoCategoria: descricaoCategoria ?? this.descricaoCategoria,
       sincronizado: sincronizado ?? this.sincronizado,
       rowid: rowid ?? this.rowid,
     );
@@ -322,6 +367,9 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
     if (idCategoria.present) {
       map['ID_CATEGORIA'] = Variable<String>(idCategoria.value);
     }
+    if (descricaoCategoria.present) {
+      map['DESCRICAO_CATEGORIA'] = Variable<String>(descricaoCategoria.value);
+    }
     if (sincronizado.present) {
       map['SINCRONIZADO'] = Variable<bool>(sincronizado.value);
     }
@@ -339,6 +387,7 @@ class DespesaCompanion extends UpdateCompanion<DespesaData> {
           ..write('valor: $valor, ')
           ..write('data: $data, ')
           ..write('idCategoria: $idCategoria, ')
+          ..write('descricaoCategoria: $descricaoCategoria, ')
           ..write('sincronizado: $sincronizado, ')
           ..write('rowid: $rowid')
           ..write(')'))
