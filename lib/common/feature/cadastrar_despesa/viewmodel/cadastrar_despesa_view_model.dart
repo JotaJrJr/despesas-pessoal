@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:despesas/common/database/services/service_categoria_impl.dart';
 import 'package:despesas/common/database/services/service_despesa_impl.dart';
 import 'package:despesas/common/models/categoria_despesa_model.dart';
@@ -8,6 +9,7 @@ import 'package:uuid/uuid.dart';
 class CadastrarDespesaViewModel extends ChangeNotifier {
   final ServiceDespesaImpl serviceDespesaImpl;
   final ServiceCategoriaImpl serviceCategoriaImpl;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   CadastrarDespesaViewModel({
     required this.serviceDespesaImpl,
@@ -51,9 +53,24 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
       id: idDespesa,
       descricao: descricaoController.text,
       valor: extractNumericValue(valorController.text),
+      idCategoria: "1",
     );
+    debugPrint(model.toString());
+    debugPrint(model.descricao);
+    debugPrint(model.id);
+    debugPrint(model.valor.toString());
 
     return model;
+  }
+
+  Future<void> saveDespesaToFirestore(DespesaModel model) async {
+    try {
+      final Map<String, dynamic> despesaMap = model.toJson();
+
+      await firestore.collection('despesas').add(model.toJson());
+    } catch (e) {
+      debugPrint("deu erro aqui: $e");
+    }
   }
 
   bool canSaveCategoria() {
@@ -81,34 +98,17 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     serviceCategoriaImpl.deleteCategoria(id);
   }
 
-  // Future<CategoriaModel> insertCategoria() {
-  //   String idCategoria = Uuid().v4();
-
-  //   try {
-  //     if (categoriaDescricaoController.text.isNotEmpty) {
-  //       CategoriaModel categoria = CategoriaModel(
-  //         id: idCategoria,
-  //         descricao: categoriaDescricaoController.text,
-  //       );
-
-  //     }
-  //   } catch (e) {}
-  // }
-
   bool canSave() {
     return descricaoController.text.isNotEmpty && valorController.text.isNotEmpty;
   }
 
   double extractNumericValue(String text) {
-    // Remove non-numeric characters and replace commas with dots
     String cleanedText = text.replaceAll(RegExp(r'[^0-9,]'), '').replaceAll(',', '.');
 
-    // Parse the cleaned text to double
     try {
       return double.parse(cleanedText);
     } catch (e) {
-      // Handle parsing error if necessary
-      print("Error parsing numeric value: $e");
+      debugPrint("Error parsing numeric value: $e");
       return 0.0;
     }
   }

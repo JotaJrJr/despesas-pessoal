@@ -62,32 +62,55 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
               // onChanged: () {},
             ),
             const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(4.0),
+            GestureDetector(
+              onTap: () => _viewModel.saveDespesaToFirestore(_viewModel.createModel()),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: const Text(
+                    "Adicionar Despesa",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                child: const Text(
-                  "Adicionar Despesa",
-                  style: TextStyle(color: Colors.white),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => print(_viewModel.createModel()),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: const Text(
+                    "Print Despesa",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            Visibility(
-              visible: _viewModel.isCategoriaSelecionada,
-              child: AnimatedBuilder(
-                animation: _viewModel,
-                builder: (_, __) {
-                  return GestureDetector(
-                    onTap: () => _viewModel.esvaziarCategoriaSelecionada(),
-                    child: Column(
-                      children: [
-                        const Text("Categoria selecionada:"),
-                        Container(
+            AnimatedBuilder(
+              animation: _viewModel,
+              builder: (_, __) {
+                return Visibility(
+                  visible: _viewModel.isCategoriaSelecionada,
+                  child: Column(
+                    children: [
+                      const Text("Categoria selecionada:"),
+                      GestureDetector(
+                        onTap: () {
+                          _viewModel.esvaziarCategoriaSelecionada();
+                          print("ADSADADASD");
+                        },
+                        child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
@@ -96,12 +119,12 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
                             ),
                           ),
                           child: Text(SafeHandler.value(_viewModel.categoriaSelecionada?.descricao)),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
             const Spacer(),
             Align(
