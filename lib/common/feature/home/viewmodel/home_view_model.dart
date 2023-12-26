@@ -13,6 +13,9 @@ class HomeViewModel extends ChangeNotifier {
   // Future<List<DespesaModel>> getAllDespesas() {
   //   return serviceDespesaImpl.getDespesas();
   // }
+  double valorTotal() {
+    return listaDespesas.fold<double>(0, (previousValue, element) => previousValue + (element.valor ?? 0));
+  }
 
   void fillListaDespesas() async {
     listaDespesas = await serviceDespesaImpl.getDespesas();
