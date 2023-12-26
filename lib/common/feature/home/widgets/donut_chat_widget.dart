@@ -52,24 +52,47 @@ class DonutChartWidget extends StatelessWidget {
 class DonutChartPainter extends CustomPainter {
   final Map<String?, num> values;
   final String valorTotal;
+  late List<Color> segmentColors;
 
-  late Paint midPaint;
+  late Paint midPaint = Paint()
+    ..color = Colors.white
+    ..style = PaintingStyle.fill;
 
-  final linePaint = Paint()
-    ..color = const Color.fromARGB(255, 255, 255, 255)
-    ..strokeWidth = 2.0
-    ..style = PaintingStyle.stroke;
+  late Paint linePaint;
+  // late Paint linePaint = Paint()
+  //   ..color = const Color.fromARGB(255, 255, 255, 255)
+  //   ..strokeWidth = 2.0
+  //   ..style = PaintingStyle.stroke;
 
-  final centeredStyle = const TextStyle(
-    color: Color(0xFF000000),
-    fontSize: 32,
-    fontWeight: FontWeight.bold,
-  );
+  late TextStyle centeredStyle;
 
-  DonutChartPainter({required this.values, required this.valorTotal}) {
+  // final centeredStyle = const TextStyle(
+  //   color: Color(0xFF000000),
+  //   fontSize: 32,
+  //   fontWeight: FontWeight.bold,
+  // );
+
+  DonutChartPainter({
+    required this.values,
+    required this.valorTotal,
+  }) {
     midPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
+
+    linePaint = Paint()
+      ..color = const Color.fromARGB(255, 255, 255, 255)
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    centeredStyle = const TextStyle(
+      color: Color(0xFF000000),
+      fontSize: 22,
+      fontWeight: FontWeight.bold,
+    );
+
+    // Generate random colors here
+    segmentColors = List.generate(values.length, (index) => getRandomColor());
   }
 
   @override
@@ -90,7 +113,8 @@ class DonutChartPainter extends CustomPainter {
       final sweepAngle = element.value * 360 * pi / 180;
       final paint = Paint()
         ..style = PaintingStyle.fill
-        ..color = getRandomColor();
+        // ..color = getRandomColor();
+        ..color = segmentColors[values.keys.toList().indexOf(element.key)];
 
       canvas.drawArc(rect, previousValue, sweepAngle, true, paint);
 
