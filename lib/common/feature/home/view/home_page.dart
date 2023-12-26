@@ -66,26 +66,50 @@ class _HomePageState extends State<HomePage> {
                               border: Border.all(
                                 color: Colors.red,
                               )),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(SafeHandler.value(despesa.descricao)),
-                                  const Spacer(),
-                                  Text(SafeHandler.value(formatCurrency(despesa.valor!))),
+                                  Text(SafeHandler.value(despesa.descricaoCategoria)),
                                 ],
                               ),
-                              // const SizedBox(height: 8.0),
-                              Row(
+                              const Spacer(),
+                              Column(
                                 children: [
-                                  Text(SafeHandler.value(despesa.descricaoCategoria)),
-                                  const Spacer(),
+                                  Text(SafeHandler.value(formatCurrency(despesa.valor!))),
                                   despesa.data != null ? Text(SafeHandler.value(formatTimestamp(despesa.data!))) : Container(),
                                 ],
                               ),
+                              IconButton(
+                                onPressed: () => _viewModel.deleteDespesa(despesa.id!),
+                                icon: Icon(Icons.delete),
+                              )
                             ],
                           ),
+                          // child: Column(
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          //   children: [
+                          //     Row(
+                          //       children: [
+                          //         Text(SafeHandler.value(despesa.descricao)),
+                          //         const Spacer(),
+                          //         Text(SafeHandler.value(formatCurrency(despesa.valor!))),
+                          //       ],
+                          //     ),
+                          //     // const SizedBox(height: 8.0),
+                          //     Row(
+                          //       children: [
+                          //         Text(SafeHandler.value(despesa.descricaoCategoria)),
+                          //         const Spacer(),
+                          //         despesa.data != null ? Text(SafeHandler.value(formatTimestamp(despesa.data!))) : Container(),
+                          //       ],
+                          //     ),
+                          //   ],
+                          // ),
                         ),
                       );
                     },

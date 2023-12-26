@@ -22,4 +22,10 @@ class HomeViewModel extends ChangeNotifier {
     listaDespesas.sort((a, b) => (a.data ?? 0).compareTo(b.data ?? 0));
     notifyListeners();
   }
+
+  void deleteDespesa(String id) async {
+    await serviceDespesaImpl.deleteDespesa(id);
+    fillListaDespesas();
+    notifyListeners();
+  }
 }
