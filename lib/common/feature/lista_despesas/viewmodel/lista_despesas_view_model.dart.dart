@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../../../database/services/service_despesa_impl.dart';
 
-class HomeViewModel extends ChangeNotifier {
+class ListaDespesasViewModel extends ChangeNotifier {
   final ServiceDespesaImpl serviceDespesaImpl;
 
-  HomeViewModel({required this.serviceDespesaImpl});
+  ListaDespesasViewModel({required this.serviceDespesaImpl});
 
   List<DespesaModel> listaDespesas = [];
 
@@ -22,5 +22,16 @@ class HomeViewModel extends ChangeNotifier {
     await serviceDespesaImpl.deleteDespesa(id);
     fillListaDespesas();
     notifyListeners();
+  }
+
+  Map<K, List<T>> groupBy<T, K>(Iterable<T> items, K Function(T) keySelector) {
+    Map<K, List<T>> groupedMap = {};
+
+    for (var item in items) {
+      var key = keySelector(item);
+      groupedMap.putIfAbsent(key, () => []).add(item);
+    }
+
+    return groupedMap;
   }
 }

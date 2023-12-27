@@ -1,5 +1,5 @@
 import 'package:despesas/common/database/app_db.dart';
-import 'package:despesas/common/feature/home/view/home_page.dart';
+import 'package:despesas/common/feature/perfil/view/perfil_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        home: HomePage(),
+        home: PerfilPage(),
       ),
     );
   }
