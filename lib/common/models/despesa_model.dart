@@ -22,14 +22,14 @@ class DespesaModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['descricao'] = descricao;
-    data['valor'] = valor;
-    data['data'] = data;
-    data['idCategoria'] = idCategoria;
-    data['descricaoCategoria'] = descricaoCategoria;
-    data['sincronizado'] = sincronizado;
-    return data;
+    final Map<String, dynamic> object = {};
+    object['descricao'] = descricao;
+    object['valor'] = valor;
+    object['data'] = data;
+    object['idCategoria'] = idCategoria;
+    object['descricaoCategoria'] = descricaoCategoria;
+    object['sincronizado'] = sincronizado;
+    return object;
   }
 
   DespesaModel.fromData(DespesaData despesaData) {

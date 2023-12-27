@@ -9,7 +9,6 @@ import 'package:uuid/uuid.dart';
 class CadastrarDespesaViewModel extends ChangeNotifier {
   final ServiceDespesaImpl serviceDespesaImpl;
   final ServiceCategoriaImpl serviceCategoriaImpl;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   CadastrarDespesaViewModel({
     required this.serviceDespesaImpl,
@@ -47,37 +46,40 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
   }
 
   DespesaModel createModel() {
-    String idDespesa = Uuid().v4();
+    String idDespesa = const Uuid().v4();
 
     DespesaModel model = DespesaModel(
-        id: idDespesa,
-        descricao: descricaoController.text,
-        valor: extractNumericValue(valorController.text),
-        idCategoria: categoriaSelecionada?.id,
-        descricaoCategoria: categoriaSelecionada?.descricao,
-        data: DateTime.now().millisecondsSinceEpoch);
-
-    debugPrint(model.toString());
-    debugPrint(model.descricao);
-    debugPrint(model.id);
-    debugPrint(model.valor.toString());
+      id: idDespesa,
+      descricao: descricaoController.text,
+      valor: extractNumericValue(valorController.text),
+      idCategoria: categoriaSelecionada?.id,
+      descricaoCategoria: categoriaSelecionada?.descricao,
+      data: DateTime.now().millisecondsSinceEpoch,
+      sincronizado: true,
+    );
 
     return model;
   }
 
   Future<void> saveDespesaToFirestore(DespesaModel model) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
     try {
-      final Map<String, dynamic> despesaMap = model.toJson();
+      // var doc = firestore.collection('despesas').doc(model.id!);
 
-      // await firestore.collection('despesas').doc(model.id!).collection('despesas').add(model.toJson());
-      // await firestore.collection('despesas').doc(model.id!).set(model.toJson());
+      // debugPrint(doc.toString());
 
-      await firestore.collection('despesas').add({
-        'id': "12j301923j1",
-        'descricao': "descrição foda",
-        'valor': 12.3,
-        'idCategoria': "1",
-      });
+      // await doc.set(model.toJson()).then((value) {
+      //   debugPrint("foi");
+      // }).catchError(debugPrint);
+
+      await firestore.collection('despesas').add(model.toJson());
+
+      // await firestore.collection('despesas').doc("idfoda").set({
+      //   'id': "idfoda",
+      //   'valor': 129.20,
+      //   'descricao': "descricao foda",
+      // });
     } catch (e) {
       debugPrint("deu erro aqui: $e");
       debugPrint(e.toString());
@@ -105,8 +107,8 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> insertDespesa(DespesaModel model) async {
-    await serviceDespesaImpl.createDespesa(model);
+  void insertDespesa(DespesaModel model) {
+    Future.wait([serviceDespesaImpl.createDespesa(model)]);
   }
 
   void deleteCategoriaById(String id) {

@@ -4,6 +4,7 @@ import 'package:despesas/common/feature/cadastrar_despesa/view/cadastrar_despesa
 import 'package:despesas/common/feature/home/viewmodel/home_view_model.dart';
 import 'package:despesas/common/feature/home/widgets/donut_chat_widget.dart';
 import 'package:despesas/common/models/despesa_model.dart';
+import 'package:despesas/common/widgets/delete_despesa_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,12 +17,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late HomeViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
+
     _viewModel = HomeViewModel(
       serviceDespesaImpl: ServiceDespesaImpl(
         dao: Provider.of<AppDb>(context, listen: false).despesaDao,
@@ -38,17 +40,17 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Despesas"),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          DonutChartWidget(
-            despesas: _viewModel.listaDespesas,
-            valorTotal: _viewModel.valorTotal().toString(),
-          ),
-          Expanded(
-            child: AnimatedBuilder(
-                animation: _viewModel,
-                builder: (_, __) {
-                  return ListView.builder(
+      body: AnimatedBuilder(
+          animation: _viewModel,
+          builder: (_, __) {
+            return Column(
+              children: [
+                DonutChartWidget(
+                  despesas: _viewModel.listaDespesas,
+                  valorTotal: _viewModel.valorTotal.toString(),
+                ),
+                Expanded(
+                  child: ListView.builder(
                     itemCount: _viewModel.listaDespesas.length,
                     // itemCount: 4,
                     shrinkWrap: true,
@@ -85,70 +87,37 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               IconButton(
-                                onPressed: () => _viewModel.deleteDespesa(despesa.id!),
-                                icon: Icon(Icons.delete),
+                                onPressed: () => showDeleteAlertDialog(despesa.id!),
+                                icon: const Icon(Icons.delete),
                               )
                             ],
                           ),
-                          // child: Column(
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          //   children: [
-                          //     Row(
-                          //       children: [
-                          //         Text(SafeHandler.value(despesa.descricao)),
-                          //         const Spacer(),
-                          //         Text(SafeHandler.value(formatCurrency(despesa.valor!))),
-                          //       ],
-                          //     ),
-                          //     // const SizedBox(height: 8.0),
-                          //     Row(
-                          //       children: [
-                          //         Text(SafeHandler.value(despesa.descricaoCategoria)),
-                          //         const Spacer(),
-                          //         despesa.data != null ? Text(SafeHandler.value(formatTimestamp(despesa.data!))) : Container(),
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
                         ),
                       );
                     },
-                  );
-                }),
-          ),
-          // const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
+                  ),
+                ),
+                // const Spacer(),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: ElevatedButton(
                     onPressed: () {},
                     child: const Text("Filtrar"),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Gráficos"),
+                    onPressed: () => _navigateToPage(const CadastrarDespesaPage()).then((value) => _viewModel.fillListaDespesas()),
+                    child: const Text("Adicionar Despesa"),
                   ),
                 ),
+                const SizedBox(height: 16.0),
               ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => _navigateToPage(const CadastrarDespesaPage()).then((value) => _viewModel.fillListaDespesas()),
-              child: const Text("Adicionar Despesa"),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-        ],
-      ),
+            );
+          }),
     );
   }
 
@@ -161,6 +130,19 @@ class _HomePageState extends State<HomePage> {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
     DateFormat dateFormat = DateFormat('dd/MM/yyyy');
     return dateFormat.format(dateTime);
+  }
+
+  showDeleteAlertDialog(String id) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return DeleteDespesaDialogWidget(
+            onPressed: () {
+              _viewModel.deleteDespesa(id);
+              Navigator.pop(context);
+            },
+          );
+        });
   }
 
   Future<void> _navigateToPage(Widget page) => Navigator.push(context, MaterialPageRoute(builder: (context) => page));

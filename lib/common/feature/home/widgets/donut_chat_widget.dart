@@ -15,9 +15,9 @@ class DonutChartWidget extends StatelessWidget {
   num get totalValue => despesas.fold<num>(0, (previousValue, element) => previousValue + (element.valor ?? 0));
 
   Map<String?, num> get grupoValues {
-    var agrupado = groupBy(despesas, (e) => e.descricao);
+    var agrupado = groupBy(despesas, (e) => e.descricaoCategoria);
 
-    agrupado.removeWhere((key, value) => key == null);
+    agrupado.removeWhere((key, value) => key == null || key == "");
 
     var lista = agrupado.map((key, value) => MapEntry(key, sum(value, (x) => x.valor ?? 0) / totalValue));
 

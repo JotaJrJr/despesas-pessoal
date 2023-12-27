@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 class DonutChartPainter extends CustomPainter {
   final Map<String?, num> values;
   final String valorTotal;
+
   late List<Color> segmentColors;
 
   late Paint midPaint = Paint()
@@ -13,18 +14,8 @@ class DonutChartPainter extends CustomPainter {
     ..style = PaintingStyle.fill;
 
   late Paint linePaint;
-  // late Paint linePaint = Paint()
-  //   ..color = const Color.fromARGB(255, 255, 255, 255)
-  //   ..strokeWidth = 2.0
-  //   ..style = PaintingStyle.stroke;
 
   late TextStyle centeredStyle;
-
-  // final centeredStyle = const TextStyle(
-  //   color: Color(0xFF000000),
-  //   fontSize: 32,
-  //   fontWeight: FontWeight.bold,
-  // );
 
   DonutChartPainter({
     required this.values,

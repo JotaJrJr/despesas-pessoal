@@ -9,7 +9,7 @@ class ServiceDespesaImpl implements ServiceDespesa {
 
   @override
   Future<DespesaModel> createDespesa(DespesaModel model) {
-    return dao.insert(model.toData()).then((value) => DespesaModel.fromData(value));
+    return dao.insert(model.toData()).then((value) => model);
   }
 
   @override

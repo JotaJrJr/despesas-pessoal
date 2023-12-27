@@ -63,8 +63,10 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              // onTap: () => _viewModel.saveDespesaToFirestore(_viewModel.createModel()),
-              onTap: () => _viewModel.insertDespesa(_viewModel.createModel()),
+              onTap: () {
+                _viewModel.insertDespesa(_viewModel.createModel());
+                Navigator.pop(context);
+              },
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Container(
@@ -75,23 +77,6 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
                   ),
                   child: const Text(
                     "Adicionar Despesa",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => print(_viewModel.createModel()),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: const Text(
-                    "Print Despesa",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
