@@ -72,48 +72,72 @@ class _ListaDespesasPageState extends State<ListaDespesasPage> with SingleTicker
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: _viewModel.listaDespesas.length,
-                  // itemCount: 4,
+                  // itemCount: _viewModel.listaDespesas.length,
+                  itemCount: _viewModel.groupedDespesas.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    String date = _viewModel.groupedDespesas.keys.elementAt(index);
+
+                    List<DespesaModel> despesasForDate = _viewModel.groupedDespesas[date]!;
+
                     DespesaModel despesa = _viewModel.listaDespesas[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20.0),
-                            ),
-                            border: Border.all(
-                              color: Colors.red,
-                            )),
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(SafeHandler.value(despesa.descricao)),
-                                Text(SafeHandler.value(despesa.descricaoCategoria)),
-                              ],
-                            ),
-                            const Spacer(),
-                            Column(
-                              children: [
-                                Text(SafeHandler.value(formatCurrency(despesa.valor!))),
-                                despesa.data != null ? Text(SafeHandler.value(formatTimestamp(despesa.data!))) : Container(),
-                              ],
-                            ),
-                            IconButton(
-                              onPressed: () => showDeleteAlertDialog(despesa.id!),
-                              icon: const Icon(Icons.delete),
-                            )
-                          ],
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0, top: 5.0, bottom: 5.0),
+                          child: Text(
+                            date,
+                          ),
                         ),
-                      ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: despesasForDate.length,
+                          itemBuilder: (context, index) {
+                            DespesaModel model = despesasForDate[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(20.0),
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.red,
+                                    )),
+                                child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      // mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(SafeHandler.value(despesa.descricao)),
+                                        Text(SafeHandler.value(despesa.descricaoCategoria)),
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Column(
+                                      children: [
+                                        Text(SafeHandler.value(formatCurrency(despesa.valor!))),
+                                        despesa.data != null ? Text(SafeHandler.value(formatTimestamp(despesa.data!))) : Container(),
+                                      ],
+                                    ),
+                                    IconButton(
+                                      onPressed: () => showDeleteAlertDialog(despesa.id!),
+                                      icon: const Icon(Icons.delete),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      ],
                     );
                   },
                 ),

@@ -10,6 +10,10 @@ class FiltroPage extends StatefulWidget {
 class _FiltroPageState extends State<FiltroPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Filtro"),
+      ),
+    );
   }
 }
