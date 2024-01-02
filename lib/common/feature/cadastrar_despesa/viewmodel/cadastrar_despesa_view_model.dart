@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class CadastrarDespesaViewModel extends ChangeNotifier {
+  final int perfil;
   final ServiceDespesaImpl serviceDespesaImpl;
   final ServiceCategoriaImpl serviceCategoriaImpl;
 
   CadastrarDespesaViewModel({
     required this.serviceDespesaImpl,
     required this.serviceCategoriaImpl,
+    required this.perfil,
   });
 
   TextEditingController descricaoController = TextEditingController();
@@ -56,6 +58,7 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
       descricaoCategoria: categoriaSelecionada?.descricao,
       data: DateTime.now().millisecondsSinceEpoch,
       sincronizado: true,
+      perfil: perfil,
     );
 
     return model;
@@ -65,21 +68,7 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     try {
-      // var doc = firestore.collection('despesas').doc(model.id!);
-
-      // debugPrint(doc.toString());
-
-      // await doc.set(model.toJson()).then((value) {
-      //   debugPrint("foi");
-      // }).catchError(debugPrint);
-
       await firestore.collection('despesas').add(model.toJson());
-
-      // await firestore.collection('despesas').doc("idfoda").set({
-      //   'id': "idfoda",
-      //   'valor': 129.20,
-      //   'descricao': "descricao foda",
-      // });
     } catch (e) {
       debugPrint("deu erro aqui: $e");
       debugPrint(e.toString());
@@ -103,7 +92,7 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
 
       await serviceCategoriaImpl.createCategoria(model);
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 

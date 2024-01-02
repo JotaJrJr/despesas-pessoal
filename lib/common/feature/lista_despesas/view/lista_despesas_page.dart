@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 import '../../../utils/safe_handler.dart';
 
 class ListaDespesasPage extends StatefulWidget {
-  const ListaDespesasPage({super.key});
+  final int perfil;
+
+  const ListaDespesasPage({super.key, required this.perfil});
 
   @override
   State<ListaDespesasPage> createState() => _ListaDespesasPageState();
@@ -26,6 +28,7 @@ class _ListaDespesasPageState extends State<ListaDespesasPage> with SingleTicker
     super.initState();
 
     _viewModel = ListaDespesasViewModel(
+      perfil: widget.perfil,
       serviceDespesaImpl: ServiceDespesaImpl(
         dao: Provider.of<AppDb>(context, listen: false).despesaDao,
       ),
@@ -48,7 +51,9 @@ class _ListaDespesasPageState extends State<ListaDespesasPage> with SingleTicker
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToPage(const CadastrarDespesaPage()).then((value) => _viewModel.fillListaDespesas()),
+        onPressed: () => _navigateToPage(CadastrarDespesaPage(
+          perfil: widget.perfil,
+        )).then((value) => _viewModel.fillListaDespesas()),
         child: const Icon(Icons.add),
       ),
       body: AnimatedBuilder(
@@ -96,8 +101,6 @@ class _ListaDespesasPageState extends State<ListaDespesasPage> with SingleTicker
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: despesasForDate.length,
                           itemBuilder: (context, index) {
-                            DespesaModel model = despesasForDate[index];
-
                             return Padding(
                               padding: const EdgeInsets.all(4),
                               child: Container(

@@ -51,8 +51,8 @@ class DeleteDespesaDialogWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancelar")),
-                        TextButton(onPressed: () => onPressed(), child: Text("Apagar")),
+                        TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancelar")),
+                        TextButton(onPressed: () => onPressed(), child: const Text("Apagar")),
                       ],
                     )
                   ],

@@ -1,6 +1,7 @@
 class SafeHandler {
   static T value<T>(T? value, {T? defaultValue}) {
-    return value ?? (defaultValue == null ? _getDefault<T>() : defaultValue);
+    // return value ?? (defaultValue == null ? _getDefault<T>() : defaultValue);
+    return value ?? (defaultValue ?? _getDefault<T>());
   }
 
   static T _getDefault<T>() {

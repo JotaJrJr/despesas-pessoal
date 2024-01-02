@@ -12,6 +12,8 @@ class DespesaDao extends DatabaseAccessor<AppDb> with _$DespesaDaoMixin {
 
   Future<List<DespesaData>> getAll() => select(despesa).get();
 
+  Future<List<DespesaData>> getAllByPerfil(int perfil) => (select(despesa)..where((tbl) => tbl.perfil.equals(perfil))).get();
+
   Stream<List<DespesaData>> watchAll() => select(despesa).watch();
 
   Future insert(Insertable<DespesaData> despesaData) => into(despesa).insert(despesaData);

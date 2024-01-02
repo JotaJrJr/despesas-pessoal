@@ -12,7 +12,7 @@ class _FiltroPageState extends State<FiltroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Filtro"),
+        title: const Text("Filtro"),
       ),
     );
   }

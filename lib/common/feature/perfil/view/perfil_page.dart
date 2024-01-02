@@ -37,7 +37,9 @@ class _PerfilPageState extends State<PerfilPage> {
               onHighlightChanged: (value) => setState(() => onPressed = value),
               onTap: () => {
                 Future.delayed(const Duration(milliseconds: 250), () {
-                  _navigateToPage(const ListaDespesasPage());
+                  _navigateToPage(ListaDespesasPage(
+                    perfil: currentProfile,
+                  ));
                 })
               },
               child: Container(
@@ -49,6 +51,30 @@ class _PerfilPageState extends State<PerfilPage> {
                     border: Border.all(color: Colors.blue)),
                 child: const Center(
                   child: Text("Visualizar Despesas"),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            InkWell(
+              highlightColor: Colors.blue,
+              splashColor: Colors.blue,
+              onHighlightChanged: (value) => setState(() => onPressed = value),
+              onTap: () => {
+                Future.delayed(const Duration(milliseconds: 250), () {
+                  _navigateToPage(ListaDespesasPage(
+                    perfil: currentProfile,
+                  ));
+                })
+              },
+              child: Container(
+                width: double.infinity,
+                height: 80.0,
+                decoration: BoxDecoration(
+                    // color: Colors.blue,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.blue)),
+                child: const Center(
+                  child: Text("Visualizar Categorias"),
                 ),
               ),
             ),

@@ -20,7 +20,7 @@ class _GridItemState extends State<GridItem> {
 
   @override
   Widget build(BuildContext context) {
-    Color? color = Color(0xFF283852);
+    Color? color = const Color(0xFF283852);
 
     return InkWell(
       onHighlightChanged: (value) => setState(() => onPressed = value),
@@ -31,13 +31,13 @@ class _GridItemState extends State<GridItem> {
       splashColor: color,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: color!),
+          border: Border.all(color: color),
           borderRadius: BorderRadius.circular(8.5),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search),
+            const Icon(Icons.search),
             const SizedBox(height: 20),
             Text(
               widget.label,

@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import '../../../utils/safe_handler.dart';
 
 class CadastrarDespesaPage extends StatefulWidget {
-  const CadastrarDespesaPage({super.key});
+  final int perfil;
+  const CadastrarDespesaPage({super.key, required this.perfil});
 
   @override
   State<CadastrarDespesaPage> createState() => _CadastrarDespesaPageState();
@@ -25,6 +26,7 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
   void initState() {
     super.initState();
     _viewModel = CadastrarDespesaViewModel(
+        perfil: widget.perfil,
         serviceDespesaImpl: ServiceDespesaImpl(
           dao: Provider.of<AppDb>(context, listen: false).despesaDao,
         ),
@@ -46,13 +48,13 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            Text("Descrição da despesa"),
+            const Text("Descrição da despesa"),
             const SizedBox(height: 4),
             TextFieldWidget(
               controller: _viewModel.descricaoController,
             ),
             const SizedBox(height: 8),
-            Text("Valor da despesa"),
+            const Text("Valor da despesa"),
             const SizedBox(height: 4),
             TextFieldCurrencyWidget(
               isCurrencyMoney: true,
@@ -223,14 +225,14 @@ class _CadastrarDespesaPageState extends State<CadastrarDespesaPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Calma lá'),
-                                content: Text('Tem que digitar o nome da categoria pra adicionar depois'),
+                                title: const Text('Calma lá'),
+                                content: const Text('Tem que digitar o nome da categoria pra adicionar depois'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(); // Close the Dialog
                                     },
-                                    child: Text('Ok'),
+                                    child: const Text('Ok'),
                                   ),
                                 ],
                               );

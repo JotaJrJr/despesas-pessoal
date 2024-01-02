@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import '../../../database/services/service_despesa_impl.dart';
 
 class ListaDespesasViewModel extends ChangeNotifier {
+  final int perfil;
   final ServiceDespesaImpl serviceDespesaImpl;
 
-  ListaDespesasViewModel({required this.serviceDespesaImpl});
+  ListaDespesasViewModel({required this.serviceDespesaImpl, required this.perfil});
 
   List<DespesaModel> listaDespesas = [];
 
@@ -15,14 +16,8 @@ class ListaDespesasViewModel extends ChangeNotifier {
 
   double get valorTotal => listaDespesas.fold<double>(0, (previousValue, element) => previousValue + (element.valor ?? 0));
 
-  // void fillListaDespesas() async {
-  //   listaDespesas = await serviceDespesaImpl.getDespesas();
-  //   listaDespesas.sort((a, b) => (a.data ?? 0).compareTo(b.data ?? 0));
-  //   notifyListeners();
-  // }
-
   void fillListaDespesas() async {
-    listaDespesas = await serviceDespesaImpl.getDespesas();
+    listaDespesas = await serviceDespesaImpl.getAllByPerfil(perfil);
     listaDespesas.sort((a, b) => (a.data ?? 0).compareTo(b.data ?? 0));
 
     // Group despesas by date

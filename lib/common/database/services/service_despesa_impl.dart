@@ -28,6 +28,11 @@ class ServiceDespesaImpl implements ServiceDespesa {
   }
 
   @override
+  Future<List<DespesaModel>> getAllByPerfil(int perfil) {
+    return dao.getAllByPerfil(perfil).then((value) => value.map((e) => DespesaModel.fromData(e)).toList());
+  }
+
+  @override
   Future insertOrUpdate(DespesaModel model, String? id) {
     return dao.insertOrUpdate(model.toData());
   }
