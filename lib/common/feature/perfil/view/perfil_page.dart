@@ -1,3 +1,4 @@
+import 'package:despesas/common/feature/categoria/view/lista_categoria_page.dart';
 import 'package:despesas/common/feature/lista_despesas/view/lista_despesas_page.dart';
 import 'package:despesas/common/feature/perfil/widget/perfil_choice_widget.dart';
 import 'package:flutter/material.dart';
@@ -61,9 +62,7 @@ class _PerfilPageState extends State<PerfilPage> {
               onHighlightChanged: (value) => setState(() => onPressed = value),
               onTap: () => {
                 Future.delayed(const Duration(milliseconds: 250), () {
-                  _navigateToPage(ListaDespesasPage(
-                    perfil: currentProfile,
-                  ));
+                  _navigateToPage(const ListaCategoriaPage());
                 })
               },
               child: Container(
