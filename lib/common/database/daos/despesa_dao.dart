@@ -37,4 +37,8 @@ class DespesaDao extends DatabaseAccessor<AppDb> with _$DespesaDaoMixin {
       }
     });
   }
+
+  Future<void> deleteAllDespesasByIdCategoria(String idCategoria) {
+    return (delete(despesa)..where((tbl) => tbl.idCategoria.equals(idCategoria))).go();
+  }
 }

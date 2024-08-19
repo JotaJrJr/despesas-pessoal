@@ -8,4 +8,5 @@ abstract class ServiceDespesa {
   Future insertOrUpdate(DespesaModel model, String? id);
   Future<void> deleteDespesa(String id);
   Stream<List<DespesaModel>> watchAll();
+  Future<void> deleteAllDespesasByIdCategoria(String idCategoria);
 }

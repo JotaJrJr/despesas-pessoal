@@ -76,11 +76,7 @@ class CadastrarDespesaViewModel extends ChangeNotifier {
   }
 
   bool canSaveCategoria() {
-    if (categoriaDescricaoController.text.isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
+    return categoriaDescricaoController.text.isNotEmpty;
   }
 
   Future<void> insertCategoria() async {

@@ -46,4 +46,9 @@ class ServiceDespesaImpl implements ServiceDespesa {
       yield list;
     }
   }
+
+  @override
+  Future<void> deleteAllDespesasByIdCategoria(String idCategoria) {
+    return dao.deleteAllDespesasByIdCategoria(idCategoria);
+  }
 }
